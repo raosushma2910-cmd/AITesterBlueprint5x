@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Requirements-based test cases for the VWO Login Dashboard.">
+  <title>VWO Login Dashboard — Test Cases</title>
+  <style>
+    :root {
+      --ink: #17243b;
+      --muted: #56657a;
+      --brand: #2855d9;
+      --line: #dce3ee;
+      --surface: #f4f7fc;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--surface);
+      color: var(--ink);
+      font: 15px/1.55 "Segoe UI", Arial, sans-serif;
+    }
+    .page {
+      width: min(100% - 32px, 1100px);
+      margin: 30px auto;
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(23, 36, 59, .08);
+    }
+    header {
+      padding: 44px 54px 36px;
+      background: linear-gradient(125deg, #17368f, #3267e8);
+      color: var(--white);
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #dbe6ff;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; }
+    header .summary { max-width: 760px; margin: 16px 0 0; color: #edf2ff; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 24px; color: #edf2ff; font-size: .9rem; }
+    main { padding: 28px 54px 52px; }
+    .notice {
+      padding: 14px 18px;
+      border-left: 4px solid var(--brand);
+      background: #edf3ff;
+      color: #243b70;
+    }
+    h2 {
+      margin: 34px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+      color: #1d397f;
+      font-size: 1.4rem;
+    }
+    h3 { margin: 0; font-size: 1.06rem; }
+    p { margin: 8px 0 12px; }
+    ul, ol { margin: 6px 0 10px; padding-left: 22px; }
+    li { margin: 3px 0; }
+    .legend, .summary-table, .case {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+    }
+    .legend { padding: 16px 18px; }
+    .summary-table { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #edf2fb; color: #21396d; }
+    .summary-table table { min-width: 600px; }
+    .case {
+      margin: 14px 0;
+      padding: 18px 20px;
+      break-inside: avoid;
+    }
+    .case-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .case-id { color: var(--brand); font-weight: 750; white-space: nowrap; }
+    .priority {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 20px;
+      background: #eef2f8;
+      color: #394b67;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+      margin: 12px 0;
+    }
+    .field { min-width: 0; }
+    .field strong { color: #344663; }
+    .steps { margin-bottom: 8px; }
+    .expected {
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: #f2f7f4;
+    }
+    .execution {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    .muted { color: var(--muted); }
+    footer { padding: 16px 54px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+    @media (max-width: 680px) {
+      .page { width: 100%; margin: 0; border: 0; border-radius: 0; }
+      header { padding: 32px 22px; }
+      main { padding: 22px; }
+      footer { padding: 16px 22px; }
+      .fields { grid-template-columns: 1fr; gap: 4px; }
+    }
+    @media print {
+      @page { margin: 14mm; }
+      body { background: #fff; font-size: 9.5pt; }
+      .page { width: 100%; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+      header { padding: 24px 30px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      main { padding: 18px 30px; }
+      footer { padding: 12px 30px; }
+      .case { break-inside: avoid; }
+      h2, h3 { break-after: avoid; }
+      .summary-table { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="eyebrow">Quality Assurance · Test Cases</p>
+      <h1>VWO Login Dashboard</h1>
+      <p class="summary">Prioritized, requirements-based test cases for authentication, recovery, session handling, accessibility, integrations, security controls, and performance.</p>
+      <div class="meta">
+        <span><strong>Document status:</strong> Draft</span>
+        <span><strong>Version:</strong> 1.0</span>
+        <span><strong>Prepared:</strong> 17 November 2026</span>
+        <span><strong>Source:</strong> User-provided VWO Login Dashboard PRD</span>
+      </div>
+    </header>
+
+    <main>
+      <p class="notice"><strong>Execution note:</strong> These cases are not yet executed. Use an approved QA/pre-production environment and synthetic accounts only. Environment URLs, browser versions, exact password rules, session policies, error copy, rate-limit thresholds, and performance workload profiles were not specified in the PRD; confirm them with the product team before running dependent cases.</p>
+
+      <h2>Execution conventions</h2>
+      <div class="legend">
+        <p><strong>Priority:</strong> P1 = core authentication, account recovery, access/session control, or release guardrail. P2 = supporting UX, compatibility, integration, or conditional coverage.</p>
+        <p><strong>Test data:</strong> Use test accounts provisioned for the environment. The example address <code>qa.user@example.test</code> is illustrative only; never use an actual user's credentials or personal data.</p>
+        <p><strong>Result values:</strong> Set each case to Pass, Fail, Blocked, or Not Run. Record actual results and defect IDs in the execution fields.</p>
+        <p><strong>Conditional cases:</strong> Cases marked conditional apply only when the corresponding feature or provider is enabled for the release.</p>
+      </div>
+
+      <h2>Coverage index</h2>
+      <div class="summary-table">
+        <table>
+          <thead><tr><th>Requirement area</th><th>Test case IDs</th></tr></thead>
+          <tbody>
+            <tr><td>Login, validation, and feedback</td><td>VWO-LOGIN-001 to VWO-LOGIN-009</td></tr>
+            <tr><td>Remember Me, session, and routing</td><td>VWO-SESSION-001 to VWO-SESSION-004</td></tr>
+            <tr><td>Password recovery</td><td>VWO-RESET-001 to VWO-RESET-005</td></tr>
+            <tr><td>2FA and enterprise SSO</td><td>VWO-ID-001 to VWO-ID-005</td></tr>
+            <tr><td>Navigation, themes, responsive, and accessibility</td><td>VWO-UX-001 to VWO-UX-007</td></tr>
+            <tr><td>Transport, session, privacy, and rate limiting</td><td>VWO-SEC-001 to VWO-SEC-005</td></tr>
+            <tr><td>Integrations, analytics, and support</td><td>VWO-INT-001 to VWO-INT-004</td></tr>
+            <tr><td>Performance and release metrics</td><td>VWO-NFR-001 to VWO-NFR-004</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>1. Login, validation, and feedback</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-001</span><h3>Log in with valid credentials</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Email/password primary authentication; dashboard transition.</div>
+          <div class="field"><strong>Preconditions:</strong> Active test account; login page available.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic account credentials.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the login page.</li><li>Enter the valid account email and password.</li><li>Submit the form and observe the processing state.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Authentication succeeds, a clear completion/loading state is shown, and the user reaches the intended VWO dashboard.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-002</span><h3>Reject an incorrect password</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Authentication validation and clear error handling.</div>
+          <div class="field"><strong>Preconditions:</strong> Active test account.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic account email and incorrect password.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Enter the active account email and an incorrect password.</li><li>Submit the form.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Access is denied and an actionable authentication error is displayed; no authenticated dashboard or session is created.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-003</span><h3>Handle an unrecognized account or invalid credential pair</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Failed authentication error handling.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> Non-existent synthetic account or otherwise invalid credential pair.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Enter the test email and password for an unrecognized account.</li><li>Submit the form.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Authentication is denied and the UI presents the approved actionable error without exposing sensitive system details.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-004</span><h3>Validate required login fields</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Standard email and password fields; input validation.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> Empty email and/or password.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit with both fields empty.</li><li>Enter an email only and submit.</li><li>Enter a password only and submit.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Missing required values are identified with clear feedback; invalid requests are not treated as successful authentication.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-005</span><h3>Validate email format on blur</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Email format verification; validation on blur.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> Malformed email values selected using equivalence classes (missing local part, missing domain, invalid separator placement).</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Enter a malformed email in the email field.</li><li>Move focus away from the field.</li><li>Repeat with a syntactically valid test email.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Invalid format receives immediate, understandable feedback on blur; valid format is not incorrectly rejected. No authentication request is made for invalid input.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-006</span><h3>Accept a valid email format and appropriate mobile keyboard</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Email format verification and specialized mobile keyboard.</div>
+          <div class="field"><strong>Preconditions:</strong> Supported mobile device/browser available.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic test email.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the login page on a supported mobile browser.</li><li>Focus the email field and observe the keyboard/input mode.</li><li>Enter a valid test email and continue.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The email field invokes an email-appropriate mobile keyboard where supported and accepts the valid format.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-007</span><h3>Validate password field input behavior</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Password input and secure authentication handling.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic test password.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Focus the password field.</li><li>Enter the synthetic password.</li><li>Review the field display and submit the form.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Password entry follows the approved secure field behavior; the password value is not exposed in page feedback or analytics.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-008</span><h3>Submit the form using the keyboard</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Keyboard navigation compatibility.</div>
+          <div class="field"><strong>Preconditions:</strong> Active synthetic account.</div>
+          <div class="field"><strong>Test data:</strong> Valid account credentials.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Navigate to the email and password fields using the keyboard.</li><li>Enter valid credentials.</li><li>Submit using the form's keyboard action (Enter).</li></ol>
+        <p class="expected"><strong>Expected:</strong> The form can be submitted without a pointer and follows the same authentication behavior as the submit control.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-LOGIN-009</span><h3>Show loading feedback and avoid duplicate form submission</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Loading states during authentication processing.</div>
+          <div class="field"><strong>Preconditions:</strong> Network tools or test environment can observe the processing interval.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit valid credentials.</li><li>During the processing state, observe the UI and attempt a second submission if the control remains available.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Processing is clearly indicated; repeated interaction does not create unintended duplicate authentication requests or confusing UI states.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>2. Remember Me, session, and routing</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SESSION-001</span><h3>Persist a session when Remember Me is selected</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Remember Me for persistent login sessions.</div>
+          <div class="field"><strong>Preconditions:</strong> Session policy and expected persistence period confirmed; active synthetic account.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Select Remember Me and log in.</li><li>Close and reopen the browser within the configured persistence period.</li><li>Return to the VWO application.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The session persists only as defined by the approved policy and remains protected by the configured session controls.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SESSION-002</span><h3>Do not persist a session when Remember Me is not selected</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Remember Me session option.</div>
+          <div class="field"><strong>Preconditions:</strong> Default session behavior confirmed; active synthetic account.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Leave Remember Me unselected and log in.</li><li>End the browser/session using the approved test procedure.</li><li>Reopen the application and observe authentication state.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Session persistence matches the configured default behavior and does not inherit the persistent behavior reserved for Remember Me.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SESSION-003</span><h3>Expire an inactive session according to configured timeout</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Configurable session timeout and secure session handling.</div>
+          <div class="field"><strong>Preconditions:</strong> Timeout value and test method confirmed.</div>
+          <div class="field"><strong>Test data:</strong> Active synthetic session.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Log in and leave the session inactive for the configured timeout period.</li><li>Attempt to access an authenticated page or continue the session.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The session expires according to policy; protected content is not available until the user authenticates again; the user receives clear feedback.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SESSION-004</span><h3>Prevent unauthenticated access and route authenticated users correctly</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Secure session management and transition to the VWO dashboard.</div>
+          <div class="field"><strong>Preconditions:</strong> Test access to an approved protected destination.</div>
+          <div class="field"><strong>Test data:</strong> No active session, then a valid synthetic account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the protected destination without an active session.</li><li>Authenticate with the valid synthetic account.</li><li>Observe the final destination and session state.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Unauthenticated access is restricted; after successful login the user reaches the intended dashboard or approved return destination.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>3. Password recovery</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-RESET-001</span><h3>Open the forgot-password flow</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Streamlined forgot-password process.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Activate the forgot-password link.</li><li>Review the recovery page or dialog.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The recovery flow opens and provides clear instructions for continuing.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-RESET-002</span><h3>Request a password reset for a valid synthetic account</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Email-based password recovery and secure token generation.</div>
+          <div class="field"><strong>Preconditions:</strong> Account mailbox/test email service is available.</div>
+          <div class="field"><strong>Test data:</strong> Registered synthetic account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the recovery flow.</li><li>Enter the registered synthetic account email and submit.</li><li>Review the confirmation and the test mailbox.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The request is accepted and the configured email recovery message is delivered to the test mailbox; the UI gives clear confirmation without exposing a reset secret.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-RESET-003</span><h3>Validate email input in password recovery</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> User input validation and recovery feedback.</div>
+          <div class="field"><strong>Preconditions:</strong> Recovery flow available.</div>
+          <div class="field"><strong>Test data:</strong> Empty and malformed email values.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit the recovery form with an empty email.</li><li>Enter a malformed email, move focus away, and submit.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Missing or malformed input is identified with understandable feedback and is not submitted as a valid recovery request.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-RESET-004</span><h3>Enforce reset-token validity and single-use behavior</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Secure token generation for password reset.</div>
+          <div class="field"><strong>Preconditions:</strong> Token validity period and reset policy documented; test mailbox available.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic account reset messages.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Use a current reset link and complete the reset.</li><li>Attempt to reuse the same link.</li><li>Using a separate test request, attempt the flow with an expired link.</li></ol>
+        <p class="expected"><strong>Expected:</strong> A valid token permits the approved reset; a used or expired token is rejected with clear recovery guidance and cannot change the password.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-RESET-005</span><h3>Apply password requirements and verify the updated password</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Password complexity standards and strength feedback.</div>
+          <div class="field"><strong>Preconditions:</strong> Password rules and reset token are available.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic candidate values that meet and fail the documented policy.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit a candidate that fails one documented password requirement.</li><li>Observe requirement/strength feedback.</li><li>Submit a compliant synthetic password and complete reset.</li><li>Attempt login with the new password, then with the old password.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Non-compliant passwords are rejected with clear guidance; compliant reset succeeds; the new password authenticates and the old password no longer does.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>4. Multi-factor authentication and enterprise SSO</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-ID-001</span><h3>Complete login with optional 2FA enabled</h3><span class="priority">P1 · Conditional</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Optional 2FA support.</div>
+          <div class="field"><strong>Preconditions:</strong> 2FA enabled for the synthetic account; approved second-factor test method available.</div>
+          <div class="field"><strong>Test data:</strong> Valid primary credentials and valid second-factor value.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit valid primary credentials.</li><li>Complete the displayed second-factor challenge using the approved test method.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The challenge is presented and successful completion grants access to the intended dashboard.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-ID-002</span><h3>Reject an invalid or incomplete 2FA challenge</h3><span class="priority">P1 · Conditional</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Optional 2FA support and secure authentication.</div>
+          <div class="field"><strong>Preconditions:</strong> 2FA enabled for a synthetic account.</div>
+          <div class="field"><strong>Test data:</strong> Invalid or missing second-factor value.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit valid primary credentials.</li><li>Leave the second-factor input empty or enter an invalid test value.</li><li>Submit the challenge.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Access is denied; the challenge provides actionable feedback and does not create an authenticated session.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-ID-003</span><h3>Complete enterprise SSO authentication</h3><span class="priority">P1 · Conditional</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Enterprise SSO capabilities, including SAML/OAuth as configured.</div>
+          <div class="field"><strong>Preconditions:</strong> Test identity provider and enterprise account configured.</div>
+          <div class="field"><strong>Test data:</strong> Authorized synthetic identity-provider account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Choose the configured enterprise SSO option.</li><li>Complete authentication with the test identity provider.</li><li>Observe the application return path.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The configured SSO flow completes and routes the authorized user to the VWO dashboard with the expected session state.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-ID-004</span><h3>Handle SSO cancellation or provider failure</h3><span class="priority">P1 · Conditional</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Enterprise SSO integration and error handling.</div>
+          <div class="field"><strong>Preconditions:</strong> SSO configured in test environment.</div>
+          <div class="field"><strong>Test data:</strong> Test identity-provider session that can be cancelled or safely made unavailable.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Start the configured SSO flow.</li><li>Cancel at the identity provider or use the agreed provider-failure simulation.</li><li>Observe the login page and retry path.</li></ol>
+        <p class="expected"><strong>Expected:</strong> No VWO session is created; the user receives clear feedback and can retry or choose another available sign-in path.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-ID-005</span><h3>Show the correct sign-in options for account configuration</h3><span class="priority">P2 · Conditional</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Optional 2FA and enterprise SSO support.</div>
+          <div class="field"><strong>Preconditions:</strong> Test accounts configured with different authentication policies.</div>
+          <div class="field"><strong>Test data:</strong> Accounts with 2FA/SSO enabled and disabled as applicable.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the login page for each configured test account or organization.</li><li>Observe available authentication options and required challenges.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Available options and challenges match the account/organization configuration; optional features do not block standard login when not enabled.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>5. Navigation, themes, responsive design, and accessibility</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-001</span><h3>Focus the first input on initial page load</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Auto-focus on the first input field.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page loaded in a supported desktop browser.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Navigate to the login page in a fresh session.</li><li>Observe focus location after the page becomes ready.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Focus behavior matches the intended design and does not prevent assistive-technology or keyboard users from understanding the page context.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-002</span><h3>Activate fields using their visible labels</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Clickable form labels.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Click or tap the email label.</li><li>Click or tap the password label.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Each label focuses or activates its associated input.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-003</span><h3>Navigate all login controls by keyboard</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Full keyboard navigation.</div>
+          <div class="field"><strong>Preconditions:</strong> Login page available.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Use Tab and Shift+Tab to traverse all interactive items.</li><li>Use the keyboard to select the Remember Me checkbox and activate links/buttons.</li><li>Observe focus order and visibility.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Every interactive element is reachable and operable by keyboard, focus order is logical, and visible focus indication is present.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-004</span><h3>Verify screen-reader names and dynamic feedback</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> ARIA labels and screen-reader support.</div>
+          <div class="field"><strong>Preconditions:</strong> Supported screen reader/browser combination available.</div>
+          <div class="field"><strong>Test data:</strong> Valid and invalid form values.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Navigate the login form with a screen reader.</li><li>Identify each input, checkbox, link, and button.</li><li>Submit invalid values and listen for validation/error feedback.</li><li>Submit valid values and observe loading/status announcements.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Controls have meaningful accessible names and instructions; validation, errors, and status changes are exposed to assistive technology.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-005</span><h3>Verify high-contrast and WCAG 2.1 AA presentation</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> High contrast and WCAG 2.1 AA.</div>
+          <div class="field"><strong>Preconditions:</strong> Supported contrast/accessibility settings and an accessibility evaluation method available.</div>
+          <div class="field"><strong>Test data:</strong> Login page, validation and error states.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Enable the supported high-contrast or operating-system contrast setting.</li><li>Review all login controls, text, focus indicators, and error states.</li><li>Evaluate the page against the agreed WCAG 2.1 AA checklist.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Content and controls remain perceivable and operable; documented accessibility checks meet the agreed WCAG 2.1 AA acceptance criteria.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-006</span><h3>Verify responsive layout and touch interaction</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Mobile-optimized responsive design and touch-friendly controls.</div>
+          <div class="field"><strong>Preconditions:</strong> Supported desktop, tablet, and mobile viewports/devices identified.</div>
+          <div class="field"><strong>Test data:</strong> Representative viewport sizes from the agreed device matrix.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the login page at each agreed viewport size and orientation.</li><li>Inspect the form, links, announcements, and theme controls.</li><li>Complete a login interaction using touch on mobile.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Content remains readable without unintended clipping or overlap; controls are usable by touch and the form remains functional at supported sizes.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-UX-007</span><h3>Verify announcement, theme options, and visual consistency</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Product announcement; light and dark themes; VWO brand consistency.</div>
+          <div class="field"><strong>Preconditions:</strong> Theme options and announcement enabled/configured for the test build.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Review the login page branding and product announcement.</li><li>Switch between light and dark modes using the available control.</li><li>Review form fields, links, text, and feedback in each theme.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Branding is consistent; the announcement is readable; both themes display usable controls and legible content.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>6. Transport, session, privacy, and rate limiting</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SEC-001</span><h3>Enforce HTTPS for login and recovery communications</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> HTTPS enforcement and encrypted authentication transmission.</div>
+          <div class="field"><strong>Preconditions:</strong> Approved test environment and access to browser/network diagnostics.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic credentials only.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the approved login and recovery entry points.</li><li>Review the connection/security state and configured redirects.</li><li>Submit synthetic credentials and verify the request uses the approved secure transport.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Authentication and recovery pages and submissions use HTTPS; insecure access is redirected or otherwise prevented according to policy.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SEC-002</span><h3>Verify session-token handling and logout/expiry behavior</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Secure session token generation and management.</div>
+          <div class="field"><strong>Preconditions:</strong> Approved session-security checklist and test environment access.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic authenticated session.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Authenticate using a synthetic account.</li><li>Review session handling against the approved security checklist.</li><li>Sign out or allow the session to expire, then attempt to revisit the authenticated area.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Session handling matches the approved security policy; after sign-out/expiry, the session cannot be used to access protected content.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SEC-003</span><h3>Verify approved rate-limiting behavior</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Request throttling for protection against repeated unauthorized attempts.</div>
+          <div class="field"><strong>Preconditions:</strong> Written threshold, response behavior, test account, and authorized test window are approved.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic account and controlled test requests within the approved test plan.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Submit the pre-approved number and pattern of unsuccessful test attempts.</li><li>Observe responses and account/session state at and after the configured threshold.</li><li>Stop at the approved boundary and verify the configured recovery behavior.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The configured throttling control activates as specified, does not grant access, provides the approved user feedback, and follows the documented recovery policy.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SEC-004</span><h3>Prevent sensitive information in errors and telemetry</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Clear error handling, secure authentication data handling, analytics integration.</div>
+          <div class="field"><strong>Preconditions:</strong> Test access to approved application telemetry/log views.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic credentials and deliberately invalid test input.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Cause an approved validation error and a failed authentication response.</li><li>Review user-visible messages and authorized test telemetry for these events.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Feedback is actionable but does not expose secrets or internal details; telemetry does not record passwords, reset tokens, or other prohibited sensitive values.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-SEC-005</span><h3>Verify authentication data handling against privacy requirements</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> GDPR/CCPA data protection and enterprise audit requirements.</div>
+          <div class="field"><strong>Preconditions:</strong> Approved privacy, retention, and audit criteria are available.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic account and events only.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Perform an approved login and recovery journey with a synthetic account.</li><li>Review the resulting data collection, retention, and audit evidence against the approved criteria.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Data handling and audit records conform to the documented applicable privacy and enterprise requirements; no real user data is used for this test.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>7. Integrations, analytics, and support</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-INT-001</span><h3>Verify successful and failed authentication analytics</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Track login success and failure for platform optimization.</div>
+          <div class="field"><strong>Preconditions:</strong> Analytics test environment and event expectations available.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic account; one successful and one unsuccessful attempt.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Perform one successful test login.</li><li>Perform one unsuccessful test login.</li><li>Review analytics events using the approved test dashboard.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Success and failure outcomes are tracked accurately according to the event specification; credentials and prohibited sensitive values are not included.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-INT-002</span><h3>Verify post-login dashboard hand-off and context</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Seamless transition to core platform and preservation of recent session context.</div>
+          <div class="field"><strong>Preconditions:</strong> Test account has approved dashboard access and a defined return destination/context.</div>
+          <div class="field"><strong>Test data:</strong> Valid synthetic account.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Initiate login from the approved entry point or protected destination.</li><li>Authenticate successfully.</li><li>Verify landing page and any specified recent-activity context.</li></ol>
+        <p class="expected"><strong>Expected:</strong> User arrives at the intended personalized dashboard and the expected context is preserved according to product behavior.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-INT-003</span><h3>Verify registration and free-trial navigation</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Account registration link and free-trial signup path.</div>
+          <div class="field"><strong>Preconditions:</strong> Registration destination available in the test environment.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Activate the registration/free-trial link from the login page.</li><li>Verify the destination page loads and offers the intended signup path.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The link opens the configured registration experience without broken navigation or unintended loss of the original page.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-INT-004</span><h3>Verify login assistance and support path</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Customer-support integration for login assistance.</div>
+          <div class="field"><strong>Preconditions:</strong> Configured support path and test destination are known.</div>
+          <div class="field"><strong>Test data:</strong> None.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Open the login assistance/support entry point.</li><li>Follow the configured support path through its available hand-off.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The user can reach the intended support experience and receives appropriate assistance context without exposing credentials or personal data.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>8. Performance and release metrics</h2>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-NFR-001</span><h3>Measure login-page load time</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Login page loads within 2 seconds on standard connections.</div>
+          <div class="field"><strong>Preconditions:</strong> Standard connection and measurement method defined; test environment representative of the target build.</div>
+          <div class="field"><strong>Test data:</strong> Agreed repeat count, browser, and cache conditions.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Measure navigation start to the agreed page-ready point over the defined repetitions.</li><li>Record browser, connection, cache state, and results.</li><li>Compare results with the PRD target.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Login-page load time is under 2 seconds under the agreed standard-connection measurement conditions.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-NFR-002</span><h3>Evaluate login service at the agreed concurrent-user profile</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Support thousands of simultaneous login attempts.</div>
+          <div class="field"><strong>Preconditions:</strong> Approved load profile, environment capacity, synthetic account pool, and success/latency thresholds are agreed.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic accounts and an authorized workload sized to the approved profile.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Run the agreed concurrent login workload in the approved environment.</li><li>Monitor response time, success/failure, and service health.</li><li>Compare observations with the approved profile and PRD concurrency objective.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The system supports the approved profile representing thousands of simultaneous attempts without unacceptable errors or service degradation; exact thresholds are agreed before execution.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-NFR-003</span><h3>Report login success rate against the stated target</h3><span class="priority">P1</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> Login success rate target of at least 95%.</div>
+          <div class="field"><strong>Preconditions:</strong> Representative test population, expected outcomes, exclusions, and measurement window agreed.</div>
+          <div class="field"><strong>Test data:</strong> Synthetic valid/invalid accounts matching the approved measurement design.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Execute the agreed authentication sample.</li><li>Calculate successful valid authentication attempts divided by eligible valid attempts using the agreed definition.</li><li>Report the denominator, exclusions, and result.</li></ol>
+        <p class="expected"><strong>Expected:</strong> The measured login success rate is at least 95% under the agreed test conditions; report any variance and its evidence.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <article class="case">
+        <div class="case-head"><span class="case-id">VWO-NFR-004</span><h3>Collect user satisfaction feedback for login experience</h3><span class="priority">P2</span></div>
+        <div class="fields">
+          <div class="field"><strong>Requirement:</strong> User satisfaction target of at least 90%.</div>
+          <div class="field"><strong>Preconditions:</strong> Approved survey question, participant selection, sample size, and scoring method defined.</div>
+          <div class="field"><strong>Test data:</strong> Voluntary feedback collected without unnecessary personal information.</div>
+        </div>
+        <strong>Steps</strong><ol class="steps"><li>Run the approved usability evaluation of the login and recovery journeys.</li><li>Collect and score responses using the agreed method.</li><li>Report the result and sample context.</li></ol>
+        <p class="expected"><strong>Expected:</strong> Satisfaction is at least 90% under the agreed scoring method; results include the sample context and are handled according to the approved privacy requirements.</p>
+        <div class="execution">Status: Not Run · Actual result: __________ · Defect ID: __________</div>
+      </article>
+
+      <h2>Execution and closure</h2>
+      <ul>
+        <li>Run smoke checks before the full suite. If a core smoke check fails, mark dependent cases Blocked and wait for a stable build.</li>
+        <li>Record build, environment, browser/device, test date, result, actual behavior, and defect ID for each executed case.</li>
+        <li>Retest fixes and run regression cases for impacted authentication, session, recovery, and integration flows.</li>
+        <li>Submit execution results and defect summary for review. Approval roles and dates are TBD.</li>
+      </ul>
+      <p class="muted"><strong>Post-release indicators:</strong> 99.9% availability and 20% reduction in login-related support tickets are operational/business measures identified in the PRD. Collect them over an agreed post-release measurement period; they are not fully verifiable by a single pre-release test run.</p>
+    </main>
+    <footer>Prepared from the VWO Login Dashboard PRD supplied with the request. This document contains no real credentials or personal contact details.</footer>
+  </div>
+</body>
+</html>
