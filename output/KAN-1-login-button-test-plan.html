@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Draft QA test plan for Jira issue KAN-1, a login button that does not respond to valid credentials.">
+  <title>KAN-1 - Login Button Test Plan</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17243b;
+      --muted: #56657a;
+      --brand: #2855d9;
+      --line: #dce3ee;
+      --surface: #f4f7fc;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--surface);
+      color: var(--ink);
+      font: 15px/1.55 "Segoe UI", Arial, sans-serif;
+    }
+    .page {
+      width: min(100% - 32px, 1040px);
+      margin: 28px auto;
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(23, 36, 59, .08);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 34px 46px;
+      background: linear-gradient(125deg, #17368f, #3267e8);
+      color: var(--white);
+    }
+    header .eyebrow {
+      margin: 0 0 8px;
+      color: #dbe6ff;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: 2.45rem; line-height: 1.15; }
+    header .summary { max-width: 680px; margin: 12px 0 0; color: #edf2ff; }
+    .logo {
+      width: 112px;
+      height: 112px;
+      flex: 0 0 112px;
+      border: 2px solid rgba(255,255,255,.8);
+      border-radius: 10px;
+      background: #fff;
+      object-fit: contain;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 20px; font-size: .9rem; }
+    .meta strong { color: var(--white); }
+    main { padding: 26px 46px 42px; }
+    .notice {
+      margin: 0 0 24px;
+      padding: 13px 16px;
+      border-left: 4px solid var(--brand);
+      background: #edf3ff;
+      color: #243b70;
+    }
+    section { margin: 30px 0; }
+    h2 {
+      margin: 0 0 12px;
+      padding-bottom: 7px;
+      border-bottom: 2px solid var(--line);
+      color: #1d397f;
+      font-size: 1.35rem;
+    }
+    h3 { margin: 18px 0 7px; font-size: 1.03rem; }
+    p { margin: 7px 0 11px; }
+    ul, ol { padding-left: 23px; }
+    li { margin: 4px 0; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .card { padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; }
+    .card h3 { margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 9px 10px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #edf2fb; color: #21396d; }
+    .small { color: var(--muted); font-size: .91rem; }
+    .company { margin: 18px 0 0; padding: 13px 16px; border: 1px solid var(--line); background: #fbfcff; }
+    footer { padding: 15px 46px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+    @media (max-width: 680px) {
+      .page { width: 100%; margin: 0; border: 0; border-radius: 0; }
+      header { padding: 26px 22px; }
+      main { padding: 22px; }
+      footer { padding: 15px 22px; }
+      .logo { width: 82px; height: 82px; flex-basis: 82px; }
+      h1 { font-size: 1.85rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { background: #fff; font-size: 9.5pt; }
+      .page { width: 100%; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+      header { padding: 22px 26px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      main { padding: 18px 26px 26px; }
+      footer { padding: 12px 26px; }
+      section, .card, table, tr { break-inside: avoid; }
+      h2, h3 { break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <p class="eyebrow">Quality Assurance - Jira Test Plan</p>
+        <h1>KAN-1: Login Button</h1>
+        <p class="summary">Verify the fix for the login button doing nothing after valid credentials are entered, and check nearby login behavior for regressions.</p>
+        <div class="meta">
+          <span><strong>Status:</strong> Draft - pending human review</span>
+          <span><strong>Jira type:</strong> Bug</span>
+          <span><strong>Jira status:</strong> Idea</span>
+          <span><strong>Jira priority:</strong> Medium</span>
+          <span><strong>Prepared:</strong> 18 November 2026</span>
+        </div>
+      </div>
+      <img class="logo" src="../Chapter_00_Skill_basics/01_Advance_Skills/Advance_Testplan_creator/misc/logo.png" alt="The Testing Academy logo">
+    </header>
+
+    <main>
+      <p class="notice"><strong>Review gate:</strong> This plan is based on the content of KAN-1. Confirm the open questions and target build/environment before execution. It is a draft and is not an approval to release.</p>
+
+      <section>
+        <h2>Company Context</h2>
+        <p>The supplied company notes describe work focused on A/B testing and website experimentation, identify VWO as a Bingify product, and report approximately 5,000 employees. This context is included as supplied background, not independently verified information.</p>
+      </section>
+
+      <section>
+        <h2>Jira Ticket Summary</h2>
+        <table>
+          <tbody>
+            <tr><th>Ticket</th><td><a href="https://sushmaraosworkspace-561064.atlassian.net/browse/KAN-1">KAN-1</a></td></tr>
+            <tr><th>Summary</th><td>The login button does not respond when valid credentials are entered</td></tr>
+            <tr><th>Issue type / status / priority</th><td>Bug / Idea / Medium</td></tr>
+            <tr><th>Environment in ticket</th><td>QA; Google Chrome; Windows 11</td></tr>
+            <tr><th>Reported behavior</th><td>After valid username and password are entered and Login is clicked, no action is triggered and the user remains on the login page.</td></tr>
+            <tr><th>Expected result</th><td>The user is successfully authenticated and redirected to the dashboard.</td></tr>
+            <tr><th>Impact stated in ticket</th><td>Users cannot access their accounts and are prevented from using the application.</td></tr>
+          </tbody>
+        </table>
+        <p class="small">The ticket describes an expected result but does not provide a separate, formally enumerated acceptance-criteria list.</p>
+      </section>
+
+      <section>
+        <h2>1. Scope and Objectives</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>In scope</h3>
+            <ul>
+              <li>On the QA login page, submit valid credentials using the Login button.</li>
+              <li>Confirm that the action reaches the authentication flow, completes successfully, and routes the user to the dashboard.</li>
+              <li>Check the button and page response for invalid or missing credentials and for a failed authentication request.</li>
+              <li>Run the primary verification in Chrome on Windows 11, as stated in the ticket.</li>
+              <li>Check keyboard submission and repeat-submit behavior as adjacent login regressions, subject to the expected behavior being confirmed.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Out of scope unless confirmed</h3>
+            <ul>
+              <li>Other browsers, operating systems, mobile layouts, SSO, 2FA, password recovery, or registration.</li>
+              <li>Load, penetration, or broad security testing.</li>
+              <li>Changes to the dashboard or authentication policy beyond the redirect and successful access stated in KAN-1.</li>
+            </ul>
+          </article>
+        </div>
+        <p><strong>Objective:</strong> demonstrate that a valid login attempt is no longer a silent no-op and leads to authenticated dashboard access without breaking nearby login behavior.</p>
+      </section>
+
+      <section>
+        <h2>2. Gaps and Questions for the Author</h2>
+        <table>
+          <thead><tr><th>#</th><th>Area</th><th>Finding</th><th>Question</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Environment</td><td>QA is named but no URL, build, or fix version is specified.</td><td>Which QA URL and build contain the fix?</td></tr>
+            <tr><td>2</td><td>Test account</td><td>The ticket says valid username/password but does not identify a provisioned test account.</td><td>Which approved QA account and access path should be used?</td></tr>
+            <tr><td>3</td><td>Authentication behavior</td><td>The expected dashboard destination is named generically.</td><td>What exact dashboard destination and post-login state should be verified?</td></tr>
+            <tr><td>4</td><td>Failure feedback</td><td>Expected behavior for invalid credentials and service/network errors is unspecified.</td><td>What error state and recovery action should the user see?</td></tr>
+            <tr><td>5</td><td>Button state</td><td>Loading, disabled, and repeated-click behavior are not described.</td><td>Should Login be disabled while a request is pending, and what feedback is expected?</td></tr>
+            <tr><td>6</td><td>Coverage</td><td>Only Chrome on Windows 11 is identified.</td><td>Are any additional browser/OS combinations required for this fix?</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3. Test Scenarios</h2>
+        <table>
+          <thead><tr><th>ID</th><th>Priority</th><th>Type</th><th>Scenario and expected result</th><th>Maps to</th></tr></thead>
+          <tbody>
+            <tr><td>KAN1-TS-01</td><td>P0</td><td>Positive</td><td>Enter valid QA credentials and click Login once. The login action is handled, authentication succeeds, and the user reaches the dashboard instead of remaining idle on the login page.</td><td>KAN-1 expected result</td></tr>
+            <tr><td>KAN1-TS-02</td><td>P1</td><td>Positive / regression</td><td>Submit the same valid account using the supported keyboard action. Confirm it follows the same authentication and dashboard path as the button.</td><td>KAN-1; confirm keyboard behavior</td></tr>
+            <tr><td>KAN1-TS-03</td><td>P1</td><td>Negative</td><td>Enter an invalid credential pair and submit. Confirm no authenticated dashboard access is granted and a useful failure response appears; exact copy requires confirmation.</td><td>Gap 4</td></tr>
+            <tr><td>KAN1-TS-04</td><td>P1</td><td>Boundary</td><td>Submit with username missing, password missing, and both missing. Confirm the form does not silently do nothing and required-field behavior is clear.</td><td>Gap 4</td></tr>
+            <tr><td>KAN1-TS-05</td><td>P1</td><td>Negative / resilience</td><td>Submit valid credentials while the authentication service is unavailable or the request fails. Confirm the user receives feedback, remains unauthenticated, and can retry when the service recovers.</td><td>Gap 4; expected error behavior to confirm</td></tr>
+            <tr><td>KAN1-TS-06</td><td>P1</td><td>Regression</td><td>While a valid login request is pending, click Login repeatedly. Confirm the result is stable and no duplicate or conflicting authentication behavior occurs; expected pending-state UX requires confirmation.</td><td>Gap 5</td></tr>
+            <tr><td>KAN1-TS-07</td><td>P0</td><td>Environment regression</td><td>Repeat the primary valid-login scenario in the ticket's stated QA environment: Google Chrome on Windows 11.</td><td>KAN-1 test environment</td></tr>
+          </tbody>
+        </table>
+        <p class="small">P0/P1 are proposed QA risk priorities for review; the Jira issue itself is marked Medium. Record actual results and build identifiers during execution.</p>
+      </section>
+
+      <section>
+        <h2>4. Test Data and Environment</h2>
+        <ul>
+          <li><strong>Environment:</strong> QA; the URL and build number are TBD.</li>
+          <li><strong>Browser / OS:</strong> Google Chrome on Windows 11, as specified by KAN-1.</li>
+          <li><strong>Data:</strong> one authorized valid QA account; an invalid credential pair; and blank-field combinations. Obtain data from the QA owner.</li>
+          <li><strong>Credential handling:</strong> use only approved synthetic or QA accounts. Do not place real passwords or tokens in this plan, screenshots, logs, or defect comments.</li>
+          <li><strong>Dependencies:</strong> QA login page, authentication service, and an accessible test dashboard account.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5. Risks and Assumptions</h2>
+        <ul>
+          <li><strong>Risk:</strong> the reported issue blocks all account access; failure of the primary scenario should block sign-off for this fix.</li>
+          <li><strong>Assumption:</strong> the test account is authorized, active, and has access to the expected dashboard.</li>
+          <li><strong>Assumption:</strong> “valid credentials” means an account accepted by the QA authentication service; account policy details are not in the ticket.</li>
+          <li><strong>Limitation:</strong> no fix version, build, target URL, account, or additional browser matrix is provided.</li>
+          <li><strong>Risk:</strong> success must be verified by authenticated dashboard access, not solely by a button animation or lack of an error.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>6. Entry and Exit Criteria</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Entry</h3>
+            <ul>
+              <li>Fix build and QA URL are confirmed and available.</li>
+              <li>Approved valid and invalid QA test data is provisioned.</li>
+              <li>Expected dashboard destination and error behavior are confirmed.</li>
+              <li>Smoke check confirms the login page is available in Chrome on Windows 11.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Exit</h3>
+            <ul>
+              <li>Both P0 scenarios pass on the agreed build and environment.</li>
+              <li>All planned scenarios are passed or explicitly recorded as blocked/not applicable.</li>
+              <li>No unresolved release-blocking defect remains for the login flow.</li>
+              <li>Results, build details, defects, and any accepted exceptions are recorded for reviewer approval.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Resource Allocation</h2>
+        <table>
+          <thead><tr><th>Role</th><th>Responsibility</th><th>Owner</th></tr></thead>
+          <tbody>
+            <tr><td>QA tester</td><td>Prepare authorized test data, execute scenarios, and record evidence/results.</td><td>TBD</td></tr>
+            <tr><td>Developer</td><td>Provide fix build details and support investigation of failures.</td><td>TBD</td></tr>
+            <tr><td>Product / QA reviewer</td><td>Confirm open behavior questions and approve this plan before execution.</td><td>TBD</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>8. Timeline and Sprint Details</h2>
+        <p>No sprint, calendar dates, or fix version are present in KAN-1. Plan execution after the target QA build and access are confirmed.</p>
+        <table>
+          <thead><tr><th>Phase</th><th>Activity</th><th>Timing</th></tr></thead>
+          <tbody>
+            <tr><td>Readiness</td><td>Confirm build, URL, account, and expected behavior.</td><td>TBD</td></tr>
+            <tr><td>Verification</td><td>Run P0 valid login first, then adjacent positive/negative regression scenarios.</td><td>TBD</td></tr>
+            <tr><td>Closure</td><td>Retest fixes, record results, and submit for review.</td><td>TBD</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>HUMAN REVIEW GATE</h2>
+        <ul>
+          <li><strong>Assumptions:</strong> the ticket's expected result is the intended success behavior; QA has an authorized account and a test dashboard available.</li>
+          <li><strong>Could not confirm:</strong> the fix build, QA URL, valid test account, exact error messages, pending-button behavior, or additional browser coverage.</li>
+          <li><strong>Open questions:</strong> see Section 2; resolve these before treating the plan as approved.</li>
+          <li><strong>Approval:</strong> QA/Product owner to approve or edit this draft before execution.</li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      Draft test plan for KAN-1, derived from the Jira issue and the supplied company context. The logo is from the skill's misc/logo.png asset.
+    </footer>
+  </div>
+</body>
+</html>
