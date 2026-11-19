@@ -1,0 +1,15 @@
+{
+  "name": "wingify-playwright-framework",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^22.15.30",
+    "typescript": "^5.9.3"
+  }
+}
